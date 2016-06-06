@@ -1,0 +1,219 @@
+
+\documentclass[12pt]{amsart}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+%\geometry{a4paper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+
+% See the ``Article customise'' template for come common customisations
+
+\title{A Hybrid Model for Long-Term Channel Incision into Bedrock}
+\author{GT}
+\date{June 2016} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+\section{Basic setup}
+
+Consider a channel with three elements: rock surface, with height $\eta$; sediment, with thickness $H$, and water, with depth $h$. Define some quantities:
+
+\begin{eqnarray*}
+\sigma = \text{density of rock and sediment } [M/L^3] \\
+W = \text{width of channel } [L] \\
+\Delta x = \text{length of channel segment } [L] \\
+C = \text{depth-averaged concentration of sediment in transport } [-] \\
+D = \text{sediment deposition rate } [L/T] \\
+E_s = \text{entrainment rate of sediment } [L/T] \\
+E_r = \text{entrainment rate of rock } [L/T] \\
+F_f = \text{fraction of permanently suspendable fines in bedrock } [-] \\
+\phi = \text{porosity of sediment } [-] \\
+q = \text{unit water discharge } [L^2/T] \\
+q_s = \text{unit sediment discharge } [L^2/T] \\
+x = \text{streamwise distance (positive downstream) } [L]
+\end{eqnarray*}
+
+\section{Mass conservation}
+
+\subsection{Sediment in water column}
+
+Sediment enters the water column by entrainment of sediment, entrainment of rock (where exposed beneath sediment cover), and transport from upstream. Sediment leaves the water column by deposition to the bed, and transport to downstream. This results in:
+\begin{equation}
+\frac{\partial h C}{\partial t} = E_s + (1-F_f) E_r - D - \frac{\partial q_s}{\partial x}
+\label{dhCdt}
+\end{equation}
+We consider here than when the sediment cover is ``thin enough'' it's possible to have simultaneous entrainment of sediment and of rock (which then turns into sediment). The erosion of 1~m of rock is taken produce $F_f \times 1$ meters of fines, which will never appear in the bed (they are considered ``permanently suspended'') and which are not counted in the sediment concentration $C$. Therefore, when we erode a meter of rock, we get only $1-F_f$ meters of ``depositable'' (i.e., coarse) sediment, which is counted in $C$. Bed sediment thickness $H$ only includes this coarse sediment.
+
+\subsection{Sediment on bed}
+
+Sediment on the bed is of average thickness $H$. We imagine that this thickness varies on a fine scale, so that within any given channel reach and/or within any given interval of time, there are some patches where $H$ is bigger, and some where it is smaller (and possibly zero). The conservation law says that sediment enters the bed via deposition from the water column and leaves the bed by entrainment:
+\begin{equation}
+(1-\phi )\frac{\partial H}{\partial t} = D - E_s
+\end{equation}
+The $(1-\phi )$ factor takes into account porosity: if porosity is 50\%, then 1~m of sediment would produce a 2-m thick deposit, half of which is pore space and half of which is actual sediment.
+
+\subsection{Rock}
+
+Rock erodes, and can be uplifted relative to sea level:
+\begin{equation}
+\frac{\partial R}{\partial t} = U - E_r
+\end{equation}
+Note that we assume the porosity of rock is zero, though that would be easy to relax.
+
+\subsection{Deposition rate}
+
+Let there be an effective sediment settling velocity, $V$, such that it accounts for the fact that sediment concentration is usually greater near the bed. Then the deposition rate is:
+\begin{equation}
+D = V C = V\frac{q_s}{q}
+\label{D}
+\end{equation}
+
+\section{Steady solutions}
+
+Suppose the time derivatives vanish. What do we get?
+
+\subsection{Sediment in the water column}
+
+Rearranging (\ref{dhCdt}) with a zero time derivative, and incorporating (\ref{D}),
+\begin{equation}
+\frac{dq_s}{dx} = E_s + (1-F_f) E_r - V\frac{q_s}{q}
+\end{equation}
+This says that the rate of change in sediment flux downstream is equal to the difference between entrainment from sediment and rock (first two terms on right), and deposition (last term).
+
+\subsection{Bed sediment}
+
+The steady solution for bed sediment, including the definition of $D$, says that sediment deposition and sediment entrainment rates must be equal:
+\begin{equation}
+D = V\frac{q_s}{q} = E_s
+\end{equation}
+
+\subsection{Rock}
+
+Incision balances base-level fall:
+\begin{equation}
+U = E_r
+\end{equation}
+
+\section{Combining with a simple stream-power entrainment model}
+
+\subsection{Sediment entrainment rate}
+
+Suppose that the entrainment rate of bed sediment depends on unit stream power, and on a function that goes smoothly from 0 to 1 as the sediment thickness increases, so that there is no entrainment if there is no sediment on the bed:
+\begin{equation}
+E_s = K_s q S ( 1 - \exp [-H/H_*] )
+\end{equation}
+Here $H_*$ is a characteristic sediment thickness, which could reflect the small-scale variability of $H$ and/or the scour depth of the channel during high flows. A key limitation of the above is that it neglects a threshold for entrainment. We'll consider that later.
+
+\subsection{Rock erosion}
+
+We'll take a similar view of rock erosion, with two differences: sediment cover thickness inhibits erosion, and rock has a different (presumably lower) entrainability coefficient:
+\begin{equation}
+E_r = K_r q S \exp [-H/H_*] 
+\end{equation}
+Some simplifications here: there's no threshold, and there's no explicit treatment of abrasion or loosening by sediment already in transport. Again, for now we're keeping it (relatively) simple.
+
+\subsection{Steady solutions}
+
+For sediment flux:
+\begin{equation}
+\frac{dq_s}{dx} = K_s q S ( 1 - \exp [-H/H_*] ) + (1-F_f) K_r q S \exp [-H/H_*] - V\frac{q_s}{q}
+\end{equation}
+For bed-sediment thickness:
+\begin{equation}
+V\frac{q_s}{q} = K_s q S ( 1 - \exp [-H/H_*] )
+\label{Vqsq}
+\end{equation}
+For rock height:
+\begin{equation}
+U = K_r q S \exp [-H/H_*]
+\label{U}
+\end{equation}
+
+Now, let's try to simplify these so we can get equations for three quantities of interest as a function of down-stream distance: bed-sediment thickness ($H$), sediment flux ($q_s$), and channel-bed slope ($S$, which we could then integrate to get the longitudinal profile shape). Start with sediment flux. We can substitute the last two equations into the previous one, like so:
+\begin{equation}
+\frac{dq_s}{dx} = V\frac{q_s}{q} + (1-F_f) U - V\frac{q_s}{q}
+\end{equation}
+The first and last terms on the right cancel, and if we then integrate in the downstream direction, starting from $q_s=0$ at $x=0$, we get simply:
+\begin{equation}
+q_s = (1 - F_f) U x
+\end{equation}
+This makes sense: if we're eroding at a steady rate, then the sediment flux should grow downstream, {\em unless} all the rock erodes into ``fines'', in which case there is no coarse sediment flux.
+
+Next we can use (\ref{U}) to solve for slope gradient, $S$, by simply rearranging:
+\begin{equation}
+S = \frac{U}{K_r q} \exp{H/H_*}
+\end{equation}
+This equation says: in order to erode rock at a rate $U$, the slope we need will be smaller if $K_r$ or $q$ is large (softer rocks, more water), and larger if $U$ or $H$ is large (faster erosion rate or thicker pile of shielding sediment). A larger $H_*$ means more exposure of rock to erosion, and so smaller required $S$.
+
+That's great, but it still leaves us with the unknown $H(x)$. To get that, we'll start with (\ref{Vqsq}) and substitute our new-found equation for $S$:
+\begin{equation*}
+V\frac{q_s}{q} = K_s q \left[ \frac{U \exp (H/H_*)}{K_r q} \right] ( 1 - \exp [-H/H_*] )
+\end{equation*}
+We see there's a $q$ that cancels, and if we multiply the exponentials, we end up with:
+\begin{equation*}
+V\frac{q_s}{q} = \left[ \frac{U K_s}{K_r} \right] ( \exp (H/H_*) - 1 )
+\end{equation*}
+Going through a few algebra steps...
+\begin{equation*}
+\exp (H/H_*) - 1 = \frac{V q_s K_r}{U q K_s}
+\end{equation*}
+...we end up with:
+\begin{equation*}
+H = H_* \ln \left[ \frac{V q_s K_r}{U q K_s} + 1 \right]
+\end{equation*}
+Note that we've already solved for $q_s$, so we can substitute that to get our final equation for $H$:
+\begin{equation}
+H = H_* \ln \left[ \frac{V (1 - F_f) K_r}{q K_s} x + 1 \right]
+\end{equation}
+Ta da! Let's interpret this. First, all else being equal, $H$ starts at 0 at $x=0$ and tends to grow downstream. This seems a bit odd at first.
+
+Regardless, our layer is thicker when $H_*$, $V$, or $K_r$ are larger. Well, ok, higher $V$ means sediment comes out of transport faster, higher $K_r$ means rock is easier to erode (so we can erode at a given rate under thicker sediment), and $H_*$ means the shielding effect isn't as pronounced at a particular thickness. Hmm. At least it doesn't seem obviously wrong...
+
+The last piece we need is an independent equation for $S$. We can get this by substituting in the equation for $H$ that we've just derived:
+\begin{equation}
+S = \frac{U}{K_r q} \left[ \frac{V (1 - F_f) K_r}{q K_s} x + 1 \right]
+\end{equation}
+(Here I've taken the liberty of canceling the $H_*$ and letting the $\exp$ undo the $\ln$).
+
+It's interesting to see that we have two terms. Their meaning might be more apparent if we multiply through:
+\begin{equation}
+S = \frac{UV (1 - F_f)}{q^2 K_s} x + \frac{U}{K_r q}
+\end{equation}
+The second term on the right is what you'd expect from a detachment-limited model: the slope is steeper when the erosion rate is higher, the rocks are tougher (smaller $K_r$) or there's less water available (smaller $q$). 
+
+The first term on the right reflects transport. The need to carry sediment makes the slope steeper than it otherwise would be. This effect is greater when: the settling velocity is higher (sediment is harder to carry), $F_f$ is smaller (more rock is eroded into coarse material as opposed to fines), $K_s$ is smaller (sediment is harder to pick up), or (again) there's less water to work with. But there's a further effect: the gradient steepens with downstream distance, all else equal, because we progressively pick up sediment as we move downstream.
+
+This last equation reveals (I think) why $H$ increases downstream: with more sediment to carry, we need the pile to be thicker in order to efficiently pick stuff up off the bed (the more there is, the greater the cover).
+
+So, we have a seemingly odd situation: with a constant $q$ (and other variables), we end up with a convex-upward profile along which alluvium becomes progressively thicker in the downstream direction. This seems at odds with observed river profiles. But most rivers have $q$ increasing downstream. Let's see what happens if we build that in.
+
+\subsection{Effect of downstream-increasing discharge}
+
+Suppose $q = r x$, where $r$ is runoff per unit area. If we plug this into our slope equation, we get:
+\begin{equation}
+S = \left[ \frac{UV (1 - F_f)}{r^2 K_s} + \frac{U}{K_r r} \right] x^{-1}
+\end{equation}
+Wow, {\em that} made a difference! Now we have a concave-up longitudinal profile---in fact, a logarithmic one. You might complain, reasonably enough, that although we've accounted for water input from tributaries, we haven't accounted for their {\em sediment} input. Fair enough. But first, let's see what our simple $q$ rule does to $H$.
+
+When add downstream-increasing $q$ to our $H$ equation, we find:
+\begin{equation}
+H = H_* \ln \left[ \frac{V (1 - F_f) K_r}{r K_s} + 1 \right]
+\end{equation}
+Wow, now suddenly we have a {\em constant} sediment thickness. It's larger when rock erosion is efficient and produces lots of coarse sed, and smaller when there's a lot of runoff or efficient sediment pick-up. Notice that with or without the $q$ rule, $H$ is zero if $F_f$ is unity, meaning that if all the eroded rock turns to dust, then we won't have any alluvium to blanket the bed.
+
+Note that $q_s$ doesn't depend on $q$ directly (under steady state), so it doesn't change with the introduction of our $q$ rule.
+
+\subsection{What does it all mean?}
+
+The simple stream-power model, despite its shortcomings, gives an apparently reasonable and self-consistent theory. Unlike ``tools and cover'' models, it actually explicitly includes sediment thickness as a state variable---so we don't need to ``cheat'' by introducing a proxy for cover fraction that's based on a notion of transport capacity. In fact, we don't need to introduce transport capacity at all; rather, it falls out naturally (along the lines of Davy and Lague [2009]): capacity is the $q_s$ you get when erosion equals deposition.
+
+
+
+
+
+
+%\subsection{}
+
+\end{document}
