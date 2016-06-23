@@ -1,0 +1,91 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Analytical solution for $H(t)$ in SPACE model}
+\author{GT}
+\date{June 2016}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+The evolution equation for alluvial thickness at a node is:
+\begin{equation}
+\frac{d\hat{H}}{dt'} = \hat{D} - \hat{E}_s
+\end{equation}
+where $\hat{D}$ is deposition rate and $\hat{E}_s$ is entrainment rate. The latter is $\hat{E}_s = K_s q S (1-\exp(-\hat{H}/H_*)$. We want a solution for $\hat{H}(t)$ for a small interval of time during which $\hat{D}$ and $K_s q S$ are constant in time.
+
+Start by nondimensionalizing as follows:
+\begin{eqnarray}
+H = \hat{H} / H_* \\
+D = \hat{D} / K_s q S \\
+t = t' K_s q S / H_*
+\end{eqnarray}
+
+When we plug these definitions in the evolution equation, we get
+\begin{equation}
+\frac{dH}{dt} = D - 1 + e^{-H}
+\end{equation}
+Separate variables and do an indefinite integral:
+\begin{equation}
+\int \frac{1}{D - 1 + e^{-H}} dH = \int dt
+\end{equation}
+This integral evaluates to (according to online integrator):
+\begin{equation}
+\frac{1}{D-1} \ln \left[ e^{H} (D-1) + 1 \right] = t + C
+\end{equation}
+To evaluate $C$, note that when $t=0$ (the beginning of a time step), $H=H_0$, where $H_0$ just means the initial value at the start of the time step. Multiply both sides by $(1-D)$:
+\begin{equation}
+\ln \left[ e^{H} (D-1) + 1 \right] = (D-1)t + (D-1) C
+\end{equation}
+Apply the exponential function to both sides:
+\begin{equation}
+e^H (D-1) + 1= \exp( (D-1)t + (D-1) C ) = e^{(D-1)t} e^{(D-1)C}
+\end{equation}
+Substitute in for $C$ and let the $e$ undo the $\ln$:
+\begin{equation}
+e^H (D-1) + 1= e^{(D-1)t} \left( (D-1) e^{H_0}  + 1 \right)
+\end{equation}
+Subtract one from both sides, and divide both by $(D-1)$:
+\begin{equation}
+e^H = \frac{1}{D-1} \left( e^{(D-1)t} \left( (D-1) e^{H_0}  + 1 \right) - 1 \right)
+\end{equation}
+Apply the natural log function to both sides:
+\begin{equation}
+H(t) = \ln \left[ \frac{1}{D-1} \left( e^{(D-1)t} \left( (D-1) e^{H_0}  + 1 \right) - 1 \right) \right]
+\end{equation}
+YAY!
+
+But note this blows up for $D=1$. That requires a special, and simpler solution. If $D=1$, then
+\begin{equation}
+\frac{dH}{dt} = e^{-H}
+\end{equation}
+Which, when applying the rule $H=H_0$ at $t=0$, integrates to:
+\begin{equation}
+H(t) = \ln \left[ t + e^{H_0} \right]
+\end{equation}
+
+We can also re-dimensionalize these. For $D=1$, or in other words $\hat{D} = K_sqS$, 
+\begin{equation}
+\hat{H}(t') = H_* \ln \left[ \frac{K_sqS}{H_*} t' + e^{\hat{H}_0/H_*} \right]
+\end{equation}
+Otherwise,
+\begin{equation}
+\hat{H}(t) = H_* \ln \left[ \frac{1}{D-1} \left( e^{(\hat{D}-K_s q S)t' / H_*} \left( (D-1) e^{\hat{H}_0/H_*}  + 1 \right) - 1 \right) \right]
+\end{equation}
+where I've kept the abbreviated $D$ for simplicity in a couple of places.
+
+There's a time scale: $\tau = H_* / (\hat{D}-K_sqS)$.
+
+%\section{}
+%\subsection{}
+
+
+
+\end{document}  
