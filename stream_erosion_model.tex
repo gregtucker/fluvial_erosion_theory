@@ -18,7 +18,7 @@
 
 \section{Basic setup}
 
-Consider a channel with three elements: rock surface, with height $\eta$; sediment, with thickness $H$, and water, with depth $h$. Define some quantities:
+Consider a channel with three elements: rock surface, with height $R$; sediment, with thickness $H$, and water, with depth $h$ (bed elevation is $\eta = R+H$). Define some quantities:
 
 \begin{eqnarray*}
 \sigma = \text{density of rock and sediment } [M/L^3] \\
@@ -209,10 +209,33 @@ Note that $q_s$ doesn't depend on $q$ directly (under steady state), so it doesn
 
 The simple stream-power model, despite its shortcomings, gives an apparently reasonable and self-consistent theory. Unlike ``tools and cover'' models, it actually explicitly includes sediment thickness as a state variable---so we don't need to ``cheat'' by introducing a proxy for cover fraction that's based on a notion of transport capacity. In fact, we don't need to introduce transport capacity at all; rather, it falls out naturally (along the lines of Davy and Lague [2009]): capacity is the $q_s$ you get when erosion equals deposition.
 
+\section{Dimensional analysis}
 
-
-
-
+There are three dependent variables: $q_s$, $H$, and $R$ (and also $\eta$, but that's just $H+R$). We need a scale for each of them. For $q_s$, a good place to start is to recall that for uniform $q$ and $S$, if you introduce clear water at one end, then the flow gradually approaches a transport capacity:
+\begin{equation}
+q_s = \left[ \frac{K_s q^2 S}{V} \right] \left[ 1 - \exp \left( -\frac{x V}{q} \right) \right]
+\end{equation}
+This reveals two things. First, there's a length scale for approach to transport capacity: $q/V$ (which Davy and Lague (2009) noted). Second, there's a natural scale for sediment flux as the leading factor in brackets on the right side. So, we can nondimensionalize $q_s$ as:
+\begin{equation}
+q_s' = \frac{q_s V}{K_s q^2 S}
+\end{equation}
+To normalize $H$ and $R$, just use $H_*$; for $x$, use the length scale above:
+\begin{eqnarray}
+H' = H / H_* \\
+R' = R / H_* \\
+x' = x V / q
+\end{eqnarray}
+For time scale, one choice is 
+\begin{equation}
+t' = t V / H_*
+\end{equation}
+When we plug all these in, we get the following dimensionless forms of the governing equations:
+\begin{eqnarray}
+\frac{dq_s'}{dx'} = S \left( 1 - e^{-H'} \right) + (1-F_f) \left[ \frac{K_r}{K_s} \right] S e^{-H'} - q_s' \\
+\frac{\partial H'}{\partial t'} = \left[ \frac{K_s q}{V} \right] \left( q_s' - S \left( 1 - e^{-H'} \right) \right) \\
+\frac{\partial R'}{\partial t'} = \left[ \frac{U}{V} \right] - \left[ \frac{K_r}{K_s} \right] \left[ \frac{K_s q}{V} \right] S e^{-H'}
+\end{eqnarray}
+So, there are three dimensionless parameters: an erodibility ratio, a sediment entrainment length, and a baselevel rate.
 
 %\subsection{}
 
